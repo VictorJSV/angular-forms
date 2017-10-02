@@ -1,0 +1,34 @@
+<h1>Template-driven Form</h1>
+
+<!--
+  Digamos que vamos a registrar los empleados de Orbis
+  1. Creamos la Clase modelo llamada Employee. ng g class model/employee
+  2. Importamos al componente la clase y creamos un empleado
+  3. Creamos el formulario HTML
+  4. Para construir un formulario necesito importar: import { ReactiveFormsModule } from '@angular/forms';
+  5. Creamos una lista de cargos y lo importamos a la vista
+ -->
+
+<div class="card">
+  <div class="card-body">
+    <form action="" [formGroup]="myForm" (ngSubmit)="saveForm()">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input #txtName type="text" name="name" class="form-control" formControlName="name" required>
+        {{ txtName.className }}
+      </div>
+      <div class="form-group">
+        <label for="type">Cargo</label>
+        <select name="type" class="form-control" formControlName="occupation" required>
+          <option value=""></option>
+          <option *ngFor="let occupation of occupations" [value]="occupation">{{ occupation }}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="skill">Habilidad</label>
+        <input type="text" name="skill" class="form-control" formControlName="skill">
+      </div>
+      <button type="submit" class="btn btn-primary">Add</button>
+    </form>
+  </div>
+</div>
