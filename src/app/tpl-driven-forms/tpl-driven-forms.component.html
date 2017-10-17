@@ -1,5 +1,3 @@
-<h1>Template-driven Form</h1>
-
 <!--
   Digamos que vamos a registrar los empleados de Orbis
   1. Creamos la Clase modelo llamada Employee. ng g class model/employee
@@ -8,27 +6,54 @@
   4. Para construir un formulario necesito importar: import { ReactiveFormsModule } from '@angular/forms';
   5. Creamos una lista de cargos y lo importamos a la vista
  -->
-
-<div class="card">
-  <div class="card-body">
-    <form action="" [formGroup]="myForm" (ngSubmit)="saveForm()">
-      <div class="form-group">
-        <label for="name">Name</label>
-        <input #txtName type="text" name="name" class="form-control" formControlName="name" required>
-        {{ txtName.className }}
-      </div>
-      <div class="form-group">
-        <label for="type">Cargo</label>
-        <select name="type" class="form-control" formControlName="occupation" required>
-          <option value=""></option>
-          <option *ngFor="let occupation of occupations" [value]="occupation">{{ occupation }}</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="skill">Habilidad</label>
-        <input type="text" name="skill" class="form-control" formControlName="skill">
-      </div>
-      <button type="submit" class="btn btn-primary">Add</button>
-    </form>
+<div class="container">
+  <h1>Template-driven Form</h1>
+  <div class="card">
+    <div class="card-body">
+      <form action="" [formGroup]="myForm" (ngSubmit)="saveForm()">
+        <div class="form-group">
+          <label>Name</label>
+          <input #txtName type="text" class="form-control" formControlName="name" required>
+          {{ txtName.className }}
+          <div *ngIf="myFormValues['name'].invalid && (myFormValues['name'].dirty || myFormValues['name'].touched)"
+               class="alert alert-danger">
+            <div *ngIf="myFormValues['name'].errors.required">Campo requerido.</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Cargo</label>
+          <select name="type" class="form-control" formControlName="occupation" required>
+            <option value=""></option>
+            <option *ngFor="let occupation of occupations" [value]="occupation">{{ occupation }}</option>
+          </select>
+        </div>
+        <fieldset formGroupName="ubigeo">
+          <legend>Ubigeo:</legend>
+          <div class="form-group">
+            <label>Ciudad</label>
+            <input type="text" class="form-control" formControlName="country">
+          </div>
+          <div class="form-group">
+            <label>Código Postal</label>
+            <input type="text" class="form-control" formControlName="postalCode">
+          </div>
+        </fieldset>
+        <fieldset formArrayName="skills">
+          <legend>Habilidades:</legend>
+          <div *ngFor="let skill of myFormValues['skills'].controls; let i=index" [formGroupName]="i" >
+            <h5>Habilidad #{{i + 1}}</h5>
+            <div class="form-group">
+              <label>Titulo</label>
+              <input type="text" class="form-control" formControlName="title">
+            </div>
+            <div class="form-group">
+              <label>Descripción</label>
+              <textarea class="form-control" formControlName="description"></textarea>
+            </div>
+          </div>
+        </fieldset>
+        <button type="submit" class="btn btn-primary">Add</button>
+      </form>
+    </div>
   </div>
 </div>

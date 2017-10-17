@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Employee } from '../model/employee';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import {FormGroup, FormControl, Validators, AbstractControl, FormBuilder, FormArray} from '@angular/forms';
+import {forbiddenNameValidator} from '../directives/forbidden-name.directive';
 
 @Component({
   selector: 'app-tpl-driven-forms',
@@ -10,18 +10,44 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 export class TplDrivenFormsComponent implements OnInit {
 
   occupations: Array<string>;
-  myForm: any;
+  myForm: FormGroup;
+  myFormValues: { [name: string]: AbstractControl };
 
-  constructor() {
+  constructor(private fb: FormBuilder) {
     this.occupations = ['backEnd', 'frontEnd', 'mobile'];
   }
 
   buildForm() {
-    this.myForm = new FormGroup({
-      'name': new FormControl('', [Validators.required]),
+    this.myForm = this.fb.group({
+      'name': new FormControl('', [
+        Validators.required,
+        forbiddenNameValidator(/bicho/i)
+      ]),
       'occupation': new FormControl('', [Validators.required]),
-      'skill': new FormControl('')
+      'ubigeo': new FormGroup({
+        'country': new FormControl(''),
+        'postalCode': new FormControl('')
+      }),
+      'skills': new FormArray([
+        new FormGroup({
+          'title': new FormControl(''),
+          'description': new FormControl('')
+        }),
+        new FormGroup({
+          'title': new FormControl(''),
+          'description': new FormControl('')
+        })
+      ])
     });
+
+    this.myFormValues = {
+      'name': this.myForm.get('name'),
+      'ubigeoCountry': this.myForm.get('ubigeo').get('country'),
+      'skills': this.myForm.get('skills')
+    };
+
+    console.log(this.myForm.get('skills').get([0]).get('description'))
+    console.log(this.myForm.get('name'))
   }
 
   saveForm() {
